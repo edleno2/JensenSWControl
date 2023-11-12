@@ -37,12 +37,13 @@ The protocol used by the buttons does NOT match the protocol used by the Jensen 
 
 From page 27 in the Jensen radio manual we can see the values that we need to map to:
 ![Jensen SWC Input Specs](images/image-3.png)
+
 So, the Jensen radio expects two wires - one with a either 0V or 3.3V to select a function (Bluetooth control versus media control) and the other with voltages varying from 0.6 to 2.73 volts. The button controls have two wires with different voltages indicating the media or phone control function.
 
 ## Interfacing between the buttons and the Jensen radio
 Clearly a bridge controller is needed to handle the different specs of the buttons and the radio.  It wasn't clear if the commercial PAC SWI-RC module could handle this combination, or how much it would cost to get the custom program that the vendor sells for special cases.  So I've decided to make my own controller using an ESP32-S2 Microprocessor Control Unit (MPU) module.
 
-The ESP32-S2 has both analog-to-digital (ADC) and digital-to-analog (DAC) capabilities.  An ADC will be used to measure the voltages from the button controller module and convert them to a digital value that represents the button pressed, and a DAC will be used to generate the correct output voltage for the radio based on which button was detected via the ADC.
+The ESP32-S2 has both analog-to-digital (ADC) and digital-to-analog (DAC) capabilities.  An ADC is used to measure the voltages from the button controller module and convert them to a digital value that represents the button pressed, and a DAC is used to generate the correct output voltage for the radio based on which button was detected by the ADC.
 
 ## Testing out the concept
 I built a test bed using a breadboard,  [ESP32-S2 development module](https://www.amazon.com/gp/product/B0B97K3LJQ/ref=ppx_yo_dt_b_search_asin_image?ie=UTF8&psc=1), [LCD display](https://www.amazon.com/gp/product/B07MTFDHXZ) and a [rotary encoder](https://www.amazon.com/gp/product/B07F26CT6B):
@@ -55,7 +56,7 @@ The Rotary value and the Estimated value change as you rotate the encoder.  The 
 
 A pull down resistor of 270 ohms was added from the DAC pin to ground in order to get the DAC to pull down to lower values. 
 
-By using the test bed I was able to determine that range of voltages that the Jensen radio will interpret for each control function.  In addition I found a few additional functions:
+By using the test bed I was able to determine the range of voltages that the Jensen radio interprets for each control function.  In addition I found a few more functions:
 - Fast Forward: Move forward in the current media file
 - Rewind: Move backward in the current media file
 - Menu: Navigate to the radio's menu display
@@ -85,7 +86,7 @@ One issue with the Jensen radio is a decision that was apparently made by the ma
 
 The ranges for the "modern" media (Forward, Reverse, Trk<, Trk>, Mute) are much smaller than the "legacy" values for things like volume.  The designers had to work around the legacy values and squeeze the modern values wherever they would fit in the voltage ranges.  At times the Trk< button will trigger a Vol+ because the ranges are so close. 
 ## Design
-Circuit diagram of the ESP32-S2 Dev module (a Lolin Mini-S2 clone) with the 12-to-5v buck converter module:
+Circuit diagram of the ESP32-S2 Dev module (a Lolin Mini-S2 clone) with the 12v-to-5v buck converter module:
 
 ![Circuit diagram in TinyCad](images/image-8.png)
 
@@ -129,6 +130,6 @@ As installed on the back hatch (blue tape is for alignment):
 
 ![Backup Camera mounted on hatch ](images/PXL_20231012_233639952.jpg) 
 
-The Jensen radio also provides a USB interface for either media or for Android Auto or Apple Carplay.  A custom USB mount was 3D printed to fit into the cars center console:
+The Jensen radio provides a USB interface for either media or for Android Auto or Apple Carplay.  A custom USB mount was 3D printed to fit into the cars center console:
 
 ![Custom mount for USB connector in center console](images/PXL_20231014_213053242.jpg)
